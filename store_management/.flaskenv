@@ -1,0 +1,2 @@
+FLAK_APP=app 
+FLASK_DEGUG=1
