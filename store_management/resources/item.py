@@ -8,6 +8,7 @@ from schemas import ItemSchema, ItemUpdateSchema
 blp = Blueprint("items",__name__, description="Operations on items")
 @blp.route("/item/<string:item_id>")
 class Item(MethodView):
+    @blp.response(200, ItemSchema)
     def get(self,item_id):
         try:
             return items[item_id]
@@ -20,6 +21,7 @@ class Item(MethodView):
         except KeyError:
             abort(404,message = "Item not found")
     @blp.arguments(ItemUpdateSchema)
+    @blp.response(200, ItemSchema)
     def put(self, json_data, item_id):
         json_data = request.get_json()
         item = items[item_id]
@@ -29,9 +31,11 @@ class Item(MethodView):
 
 @blp.route('/item')
 class ItemList(MethodView):
+    @blp.response(200, ItemSchema(many=True))
     def get(self):
-        return {"stores":list(items.values())}
+        items.values()
     @blp.arguments(ItemSchema)
+    @blp.response(201, ItemSchema)
     def post(self, json_dat):
         store_id = uuid.uuid4().hex
         new_store = {**json_dat, "item_id":store_id}
