@@ -7,4 +7,4 @@ class StoreModel(db.Model):
     name = db.Column(db.String(80), unique=True, nullable=False)
     
     # Define relationship to ItemModel
-    items = db.relationship("ItemModel", back_populates="store", lazy="dynamic")
+    items = db.relationship("ItemModel", back_populates="store", lazy="dynamic", cascade="all, delete")
