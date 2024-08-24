@@ -1,6 +1,9 @@
+import secrets
 import os
 from flask import Flask
 from flask_smorest import Api
+from flask_jwt_extended import JWTManager
+
 from db import db
 import models
 from resources.item import blp as ItemBluePrint
@@ -9,6 +12,8 @@ from resources.tag import blp as TagBluePrint
 
 
 def create_app(db_url=None):
+    app.config["JWT_SECRET_KEY"] = "46832766446820110000213922374257060926"
+    jwt = JWTManager(app)
     app = Flask(__name__)
 
     app.config["PROPAGATE_EXCEPTIONS"] = True
