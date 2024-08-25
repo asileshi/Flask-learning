@@ -1,7 +1,6 @@
 FROM python:3.12
-EXPOSE 5000
 WORKDIR /app
 COPY requiremets.txt .
-RUN pip install -r requiremets.txt
+RUN pip install --no-cache-dir --upgrade -r requiremets.txt
 COPY . .
-CMD ["flask", "run", "--host", "0.0.0.0"]
+CMD ["gunicorn", "--bind", "0.0.0.0:80", "app:create_app()"]
