@@ -4,6 +4,7 @@ from flask import Flask
 from flask_smorest import Api
 from flask_jwt_extended import JWTManager
 from flask import jsonify
+from flask_migrate import Migrate
 
 from db import db
 from blocklist import BLOCKLIST
@@ -88,11 +89,11 @@ def create_app(db_url=None):
 
     # Initialize the SQLAlchemy object
     db.init_app(app)
+    migrate = Migrate(app,db)
 
-
-    @app.before_request
-    def Create_table():
-        db.create_all()
+    #@app.before_request 
+    # def Create_table():
+    #     db.create_all()
 
     api = Api(app)
     api.register_blueprint(ItemBluePrint)
