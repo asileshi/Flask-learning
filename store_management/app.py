@@ -6,6 +6,7 @@ from flask_jwt_extended import JWTManager
 from flask import jsonify
 
 from db import db
+from blocklist import BLOCKLIST
 import models
 from resources.item import blp as ItemBluePrint
 from resources.store import blp as StoreBluePrint
@@ -19,6 +20,19 @@ def create_app(db_url=None):
     app.config["JWT_SECRET_KEY"] = "46832766446820110000213922374257060926"
     jwt = JWTManager(app)
     
+    @jwt.token_in_blocklist_loader
+    def check_if_token_inblocklist(jwt_header, jwt_payload):
+        return jwt_payload["jti"] in BLOCKLIST
+    @jwt.revoked_token_loader
+    def revoked_token_ballback(jwt_header, jwt_payload):
+        return (
+            jsonify(
+                {
+                    "description":"The token has been revoked", "error":"token revoked"
+                }
+            ),401,
+        )
+
     @jwt.additional_claims_loader
     def add_claims_to_jwt(identity):
         #check the database if the user is a admin
